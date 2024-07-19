@@ -94,7 +94,6 @@ r.get('/web-api/auth/session/v2/verifySession', (req, res) => {
 r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
   const { traceId } = req.query;
   const data = {
-    traceId,
     dt: {
         "oj": {
             "jid": 0
@@ -172,7 +171,20 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
         },
         "ioph": "70cfc9337c4a"
     },
+    "err": null
   };
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Origin', 'https://m.pgf-nmu2nd.com');
+  res.header('Content-Encoding', 'gzip');
+  res.header('Content-Type', 'application/json');
+  res.header('Date', 'Fri, 19 Jul 2024 12:51:15 GMT');
+  res.header('Server', 'istio-envoy');
+  res.header('Set-Cookie', 'aliyungf_tc=485fa4437c5704a3135ab94b6c12215a7988f37385f77c7121772c3af4dac7c2; Path=/; HttpOnly');
+  res.header('Vary', 'Accept-Encoding');
+  res.header('X-Envoy-Upstream-Service-Time', '660');
+  res.header('X-Rate-Limit-Limit', '1s');
+  res.header('X-Rate-Limit-Remaining', '1776');
+  res.header('X-Rate-Limit-Reset', '2024-07-19T12:51:15.0000000Z');
   res.json(new SuccessResponseObject('Session is valid', data));
 });
 
