@@ -3,9 +3,9 @@ const { SuccessResponseObject } = require('../common/http');
 const demo = require('./demo.route');
 const verifySessionJson = '../datas/verifyssesion.json';
 const verifyOperatorPlayerSessionJson = '../datas/verifyOperatorPlayerSession.json';
-const GameName = '../datas/gameName.json';
-const GameInfo = '../datas/gameInfo.json';
-const GetByResourcesTypeIds = '../datas/getByResourcesTypeIds.json';
+const GameName = '../datas/GameName.json';
+const GameInfo = '../datas/GameInfo.json';
+const GetByResourcesTypeIds = '../datas/GetByResourcesTypeIds.json';
 
 const r = Router();
 
