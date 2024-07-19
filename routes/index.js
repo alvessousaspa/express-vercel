@@ -69,7 +69,7 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
     const result = {
         dt: {
             si: {
-                wc: 0,
+                wc: 5,
                 ist: false,
                 itw: totalWin > 0,
                 fws: 0,
@@ -84,7 +84,7 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
                 fstc: null,
                 pcwc: 1,
                 rwsp: totalWin > 0 ? { [getRandomInt(3) + 1]: totalWin } : null,
-                hashr: `0:${reels.flat().join(';')}#MV#3.0#MT#1#MG#${totalWin.toFixed(2)}#`,
+                hashr: "0:5;6;7#7;5;7#6;7;5#R#5#001122#MV#3.0#MT#1#MG#4.8#",
                 ml: 2,
                 cs: 0.3,
                 rl: reels.flat(),
