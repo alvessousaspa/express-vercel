@@ -94,7 +94,7 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
                 st: 1,
                 nst: 1,
                 pf: 1,
-                aw: 1,
+                aw: 0.00,
                 wid: 0,
                 wt: "C",
                 wk: "0_C",
