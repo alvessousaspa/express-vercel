@@ -174,7 +174,6 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
   };
   res.header('Access-Control-Allow-Origin', 'https://m.sjffdsafãdsfsadfasd.online');
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Content-Type', 'application/json');
   res.json(data);
 });
 
