@@ -173,7 +173,7 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
     },
   };
   res.header('Access-Control-Allow-Origin', 'https://api.xn--sjffdsafdsfsadfasd-8sb.online');
-  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Credentials', 'false');
   res.header('Content-Encoding', 'gzip');
   res.header('Content-Type', 'application/json');
   res.json(data);
