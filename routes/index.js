@@ -172,7 +172,7 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
         "ioph": "70cfc9337c4a"
     },
   };
-  res.json(new SuccessResponseObject(data));
+  res.json(data);
 });
 
 r.get('/', (req, res) => res.json(new SuccessResponseObject('express vercel boiler plate')));
