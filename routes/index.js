@@ -171,7 +171,6 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
         },
         "ioph": "70cfc9337c4a"
     },
-    "err": null
   };
   res.header('Content-Encoding', 'gzip');
   res.header('Content-Type', 'application/json');
