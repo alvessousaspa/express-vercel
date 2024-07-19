@@ -59,16 +59,20 @@ r.post('/web-api/game-proxy/v2/Resources/GetByResourcesTypeIds', (req, res) => {
 });
 
 r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
+    const cs = req.headers.cs;
+    const ml = req.headers.ml;
+    const totalbet = cs * ml * 5;
     const reels = [generateReel(), generateReel(), generateReel()];
+    console.log(reels);
     const { lineWins, totalWin } = calculateLineWins(reels);
-    
+    console.log("lineWins", lineWins, "totalWin", totalWin);
     const result = {
         dt: {
             si: {
                 wc: 0,
                 ist: false,
                 itw: totalWin > 0,
-                fws: getRandomInt(10),
+                fws: 0,
                 wp: lineWins ? Object.keys(lineWins).map(key => reels.map(reel => reel[key - 1])) : null,
                 orl: reels.flat(),
                 lw: lineWins,
@@ -95,11 +99,11 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
                 wk: "0_C",
                 wbn: null,
                 wfg: null,
-                blb: 99997.00,
-                blab: 99994.00,
-                bl: (99994.00 + totalWin).toFixed(2),
-                tb: 3.00,
-                tbb: 3.00,
+                blb: 100,
+                blab: 100,
+                bl: 100 + totalWin.toFixed(2),
+                tb: totalbet,
+                tbb: totalbet,
                 tw: totalWin.toFixed(2),
                 np: (totalWin - 3.00).toFixed(2),
                 ocr: null,
@@ -112,7 +116,6 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
         },
         err: null
     };
-    console.log(result);
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Origin', '*');
