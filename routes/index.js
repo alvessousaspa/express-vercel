@@ -6,6 +6,7 @@ const verifyOperatorPlayerSessionJson = '../datas/verifyOperatorPlayerSession.js
 const GameName = '../datas/GameName.json';
 const GameInfo = '../datas/GameInfo.json';
 const GetByResourcesTypeIds = '../datas/GetByResourcesTypeIds.json';
+const Spin = '../datas/Spin.json';
 
 const r = Router();
 
@@ -51,6 +52,15 @@ r.post('/game-api/fortune-tiger/v2/GameInfo/Get', (req, res) => {
 r.post('/web-api/game-proxy/v2/Resources/GetByResourcesTypeIds', (req, res) => {
     const { traceId } = req.query;
     const data = require(GetByResourcesTypeIds);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.send(data);
+});
+
+r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
+    const { traceId } = req.query;
+    const data = require(Spin);
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Origin', '*');
