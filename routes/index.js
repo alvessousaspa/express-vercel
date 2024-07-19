@@ -172,7 +172,6 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
         "ioph": "70cfc9337c4a"
     },
   };
-  res.header('Content-Encoding', 'gzip');
   res.header('Content-Type', 'application/json');
   res.json(new SuccessResponseObject('Session is valid', data));
 });
