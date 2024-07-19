@@ -6,7 +6,7 @@ const app = express();
 
 // Middleware para adicionar o cabeçalho Service-Worker-Allowed
 app.use((req, res, next) => {
-  res.setHeader('Service-Worker-Allowed', '/');
+  res.setHeader('Service-Worker-Allowed', '/shared/service-worker/');
   next();
 });
 
