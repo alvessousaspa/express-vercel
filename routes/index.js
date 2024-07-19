@@ -59,7 +59,7 @@ r.post('/web-api/game-proxy/v2/Resources/GetByResourcesTypeIds', (req, res) => {
 });
 
 r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
-/*     const cs = req.headers.cs;
+    const cs = req.headers.cs;
     const ml = req.headers.ml;
     const totalbet = cs * ml * 5;
     const reels = [generateReel(), generateReel(), generateReel()];
@@ -88,19 +88,19 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
                 ml: 2,
                 cs: 0.3,
                 rl: reels.flat(),
-                sid: "1814345283544219136",
-                psid: "1814345283544219136",
+                sid: "1814402670505630721",
+                psid: "1814402670505630721",
                 st: 1,
                 nst: 1,
                 pf: 1,
-                aw: totalWin.toFixed(2),
+                aw: 1,
                 wid: 0,
                 wt: "C",
                 wk: "0_C",
                 wbn: null,
                 wfg: null,
                 blb: 100,
-                blab: 100,
+                blab: 100 - totalbet,
                 bl: 100 + totalWin.toFixed(2),
                 tb: totalbet,
                 tbb: totalbet,
@@ -115,13 +115,11 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
             }
         },
         err: null
-    }; */
-
-    const data = require('../datas/Spin.json');
+    };
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Origin', '*');
-    res.json(data);
+    res.json(result);
 });
 
 r.get('/', (req, res) => res.json(new SuccessResponseObject('express vercel boiler plate')));
