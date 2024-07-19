@@ -172,9 +172,7 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
       ioph: "a68c2c72c62d"
     },
   };
-  res.header('Access-Control-Allow-Origin', 'https://api.xn--sjffdsafdsfsadfasd-8sb.online/');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Content-Encoding', 'gzip');
+
   res.header('Content-Type', 'application/json');
   res.json(data);
 });
