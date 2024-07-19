@@ -3,7 +3,7 @@ function getRandomInt(max) {
 }
 
 function generateReel() {
-    const symbols = [0, 1, 2, 3, 4, 5, 6]; // Oranges, Firecrackers, Red Packets, Purse, Lucky Charm, Gold Ingot, Wild
+    const symbols = [0, 2, 3, 4, 5, 6, 7]; // Oranges, Firecrackers, Red Packets, Purse, Lucky Charm, Gold Ingot, Wild
     return Array.from({ length: 3 }, () => symbols[getRandomInt(symbols.length)]);
 }
 
@@ -21,12 +21,12 @@ function calculateLineWins(reels) {
     const lineWins = {};
     const payTable = {
         0: 3,
-        1: 5,
-        2: 8,
-        3: 10,
-        4: 25,
-        5: 100,
-        6: 250
+        2: 5,
+        3: 8,
+        4: 10,
+        5: 25,
+        6: 100,
+        7: 250
     };
     let totalWin = 0;
 
@@ -49,3 +49,4 @@ module.exports = {
     generateWinningPositions,
     calculateLineWins
 };
+
