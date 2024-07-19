@@ -7,7 +7,7 @@ const GameName = '../datas/GameName.json';
 const GameInfo = '../datas/GameInfo.json';
 const GetByResourcesTypeIds = '../datas/GetByResourcesTypeIds.json';
 const Spin = '../datas/Spin.json';
-const { getRandomInt, generateWinningPositions, generateLineWins, calculateTotalWin } = require('../common/utils');
+const { generateReel, calculateLineWins } = require('../common/utils');
 
 const r = Router();
 
@@ -113,9 +113,11 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
         err: null
     };
 
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Origin', '*');
     res.json(result);
 });
-
 
 r.get('/', (req, res) => res.json(new SuccessResponseObject('express vercel boiler plate')));
 
