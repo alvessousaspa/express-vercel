@@ -88,7 +88,12 @@ r.post('/web-api/auth/session/v2/verifySession', (req, res) => {
       ioph: "a68c2c72c62d"
     },
   };
-  res.json(data);
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Content-Encoding', 'gzip');
+  res.header('Content-Type', 'application/json');
+  res.jsonp(data);
 });
 
 r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
@@ -179,7 +184,7 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Content-Encoding', 'gzip');
   res.header('Content-Type', 'application/json');
-  res.send(data);
+  res.jsonp(data);
 });
 
 r.post('/web-api/game-proxy/v2/GameName/Get', (req, res) => {
