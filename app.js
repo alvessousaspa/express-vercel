@@ -6,7 +6,7 @@ const app = express();
 
 
 
-app.use('/', routes, express.csrf());
+app.use('/', express.csrf(), routes);
 // default catch all handler
 app.all('*', (req, res) => res.status(404).json(new ErrorResponseObject('route not defined')));
 
