@@ -116,10 +116,12 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
         },
         err: null
     }; */
+
+    const data = require('../datas/Spin.json');
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Origin', '*');
-    res.json(Spin);
+    res.json(data);
 });
 
 r.get('/', (req, res) => res.json(new SuccessResponseObject('express vercel boiler plate')));
