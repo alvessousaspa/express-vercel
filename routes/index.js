@@ -59,70 +59,63 @@ r.post('/web-api/game-proxy/v2/Resources/GetByResourcesTypeIds', (req, res) => {
 });
 
 r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
-    const winningPositions = generateWinningPositions();
-    const symbols = Object.values(winningPositions).flat();
-    const lineWins = generateLineWins(symbols);
-    const totalWin = calculateTotalWin(lineWins);
-
+    const reels = [generateReel(), generateReel(), generateReel()];
+    const { lineWins, totalWin } = calculateLineWins(reels);
+    
     const result = {
         dt: {
             si: {
                 wc: 0,
                 ist: false,
-                itw: false,
-                fws: getRandomInt(10),  // Número de vitórias em rodadas grátis
-                wp: winningPositions,
-                orl: null,
+                itw: totalWin > 0,
+                fws: getRandomInt(10),
+                wp: lineWins ? Object.keys(lineWins).map(key => reels.map(reel => reel[key - 1])) : null,
+                orl: reels.flat(),
                 lw: lineWins,
                 irs: false,
-                gwt: getRandomInt(5),  // Tipo de vitória no jogo
+                gwt: -1,
                 fb: null,
-                ctw: totalWin,
-                cwc: getRandomInt(5),
-                fstc: { [getRandomInt(5)]: 1 },
-                pcwc: 0,
-                rwsp: {
-                    1: (Math.random() * 10).toFixed(1),
-                    2: (Math.random() * 10).toFixed(1),
-                    3: (Math.random() * 10).toFixed(1),
-                    4: (Math.random() * 10).toFixed(1),
-                    5: (Math.random() * 10).toFixed(1)
-                },
-                hashr: "1:5;5;5#5;0;5#5;0;5#R#5#011121#MV#0#MT#1#R#5#001020#MV#0#MT#1#R#5#021222#MV#0#MT#1#R#5#001122#MV#0#MT#1#R#5#021120#MV#0#MT#1#MG#240.0#",
+                ctw: totalWin.toFixed(2),
+                cwc: totalWin > 0 ? 1 : 0,
+                fstc: null,
+                pcwc: totalWin > 0 ? 1 : 0,
+                rwsp: totalWin > 0 ? { [getRandomInt(3) + 1]: totalWin } : null,
+                hashr: `0:${reels.flat().join(';')}#MV#3.0#MT#1#MG#${totalWin.toFixed(2)}#`,
                 ml: 2,
                 cs: 0.3,
-                rl: [getRandomInt(7), getRandomInt(7), getRandomInt(7), getRandomInt(7), 0, 0, getRandomInt(7), getRandomInt(7), getRandomInt(7)],
-                sid: "1813948759773478400",
-                psid: "1813948732749577728",
-                st: 4,
+                rl: reels.flat(),
+                sid: "1814345283544219136",
+                psid: "1814345283544219136",
+                st: 1,
                 nst: 1,
                 pf: 1,
-                aw: parseFloat(totalWin),
+                aw: totalWin.toFixed(2),
                 wid: 0,
                 wt: "C",
                 wk: "0_C",
                 wbn: null,
                 wfg: null,
-                blb: 100728.40,
-                blab: 100728.40,
-                bl: 100728.40 + parseFloat(totalWin),
-                tb: 0.00,
+                blb: 99997.00,
+                blab: 99994.00,
+                bl: (99994.00 + totalWin).toFixed(2),
+                tb: 3.00,
                 tbb: 3.00,
-                tw: parseFloat(totalWin),
-                np: parseFloat(totalWin),
+                tw: totalWin.toFixed(2),
+                np: (totalWin - 3.00).toFixed(2),
                 ocr: null,
                 mr: null,
-                ge: [1, 11]
+                ge: [
+                    1,
+                    11
+                ]
             }
         },
         err: null
     };
 
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Origin', '*');
     res.json(result);
 });
+
 
 r.get('/', (req, res) => res.json(new SuccessResponseObject('express vercel boiler plate')));
 

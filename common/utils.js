@@ -2,55 +2,50 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-function generateWinningPositions() {
+function generateReel() {
+    const symbols = [0, 1, 2, 3, 4, 5, 6]; // Oranges, Firecrackers, Red Packets, Purse, Lucky Charm, Gold Ingot, Wild
+    return Array.from({ length: 3 }, () => symbols[getRandomInt(symbols.length)]);
+}
+
+function generateWinningPositions(reels) {
     const positions = {};
-    for (let i = 1; i <= 5; i++) {
-        positions[i] = [getRandomInt(9), getRandomInt(9), getRandomInt(9)];
+    for (let i = 0; i < reels.length; i++) {
+        const reel = reels[i];
+        const position = getRandomInt(3);
+        positions[i + 1] = reel[position];
     }
     return positions;
 }
 
-function generateLineWins(symbols) {
+function calculateLineWins(reels) {
     const lineWins = {};
-    const winValues = {
-        '0': 250, // Wild
-        '1': 100, // Gold Ingot
-        '2': 25,  // Lucky Charm
-        '3': 10,  // Purse
-        '4': 8,   // Red Packet
-        '5': 5,   // Firecrackers
-        '6': 3    // Oranges
+    const payTable = {
+        0: 3,
+        1: 5,
+        2: 8,
+        3: 10,
+        4: 25,
+        5: 100,
+        6: 250
     };
+    let totalWin = 0;
 
-    // Determinar as linhas vencedoras
-    const lines = [
-        [0, 0, 0], [1, 1, 1], [2, 2, 2], // linhas horizontais
-        [0, 1, 2], [2, 1, 0]  // linhas diagonais
-    ];
-
-    for (let i = 1; i <= 5; i++) {
-        const line = lines[i - 1];
-        const symbol = symbols[line[0]];
-        let winAmount = 0;
-
-        // Se todos os símbolos na linha forem iguais, é uma linha vencedora
-        if (symbols[line[0]] === symbols[line[1]] && symbols[line[1]] === symbols[line[2]]) {
-            winAmount = winValues[symbol] || 0;
+    // Checking horizontal lines
+    for (let line = 0; line < 3; line++) {
+        const symbol = reels[0][line];
+        if (reels[1][line] === symbol && reels[2][line] === symbol) {
+            const winAmount = payTable[symbol];
+            lineWins[line + 1] = winAmount;
+            totalWin += winAmount;
         }
-
-        lineWins[i] = winAmount.toFixed(1);
     }
 
-    return lineWins;
-}
-
-function calculateTotalWin(lineWins) {
-    return Object.values(lineWins).reduce((acc, win) => acc + parseFloat(win), 0).toFixed(2);
+    return { lineWins, totalWin };
 }
 
 module.exports = {
     getRandomInt,
+    generateReel,
     generateWinningPositions,
-    generateLineWins,
-    calculateTotalWin
+    calculateLineWins
 };
