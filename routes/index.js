@@ -186,8 +186,6 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
 r.post('/web-api/game-proxy/v2/GameName/Get', (req, res) => {
   const { traceId } = req.query;
   const data = {
-    traceId,
-    status: 'success',
     data: {
         "dt": {
             "1": "Honey Trap of Diao Chan",
@@ -330,8 +328,6 @@ r.post('/web-api/game-proxy/v2/GameName/Get', (req, res) => {
 r.post('/game-api/fortune-tiger/v2/GameInfo/Get', (req, res) => {
   const { traceId } = req.query;
   const data = {
-    traceId,
-    status: 'success',
     data: {
         "dt": {
             "1": "Honey Trap of Diao Chan",
