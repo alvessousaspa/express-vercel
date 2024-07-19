@@ -94,7 +94,6 @@ r.get('/web-api/auth/session/v2/verifySession', (req, res) => {
 r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
   const { traceId } = req.query;
   const data = {
-    traceId,
     dt: {
       oj: {
         jid: 0
@@ -173,7 +172,8 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
       ioph: "a68c2c72c62d"
     },
   };
-
+  res.header('Access-Control-Allow-Origin', 'https://m.sjffdsafãdsfsadfasd.online');
+  res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Content-Type', 'application/json');
   res.json(data);
 });
