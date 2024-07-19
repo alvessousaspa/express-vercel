@@ -173,7 +173,16 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
     },
     "err": null
 }
-  res.json(data);
+
+
+r.options('*', function(req, res, next) {
+  res.header(
+    'Access-Control-Allow-Methods',
+    'PUT, GET, HEAD, POST, DELETE, OPTIONS'
+  );
+  res.header('Access-Control-Allow-Origin', '*');
+  res.send(200);
+});
 });
 
 r.post('/web-api/game-proxy/v2/GameName/Get', (req, res) => {
