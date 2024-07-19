@@ -102,7 +102,7 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
                 wfg: null,
                 blb: 100,
                 blab: 100 - totalbet,
-                bl: 100 + totalWin.toFixed(2),
+                bl: 100,
                 tb: totalbet,
                 tbb: totalbet,
                 tw: totalWin.toFixed(2),
