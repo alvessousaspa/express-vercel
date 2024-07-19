@@ -88,7 +88,7 @@ r.post('/web-api/auth/session/v2/verifySession', (req, res) => {
       ioph: "a68c2c72c62d"
     },
   };
-  res.json(new SuccessResponseObject('Session is valid', data));
+  res.json(data);
 });
 
 r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
