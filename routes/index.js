@@ -176,8 +176,6 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
   res.header('Access-Control-Allow-Credentials', 'false');
   res.header('Content-Encoding', 'gzip');
   res.header('Content-Type', 'application/json');
-  res.header('Server', 'istio-envoy');
-  res.header('Vary', 'Accept-Encoding');
   res.json(data);
 });
 
