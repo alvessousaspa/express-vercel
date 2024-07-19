@@ -6,7 +6,7 @@ const r = Router();
 
 r.use('/demo', demo);
 
-r.get('/web-api/auth/session/v2/verifySession', (req, res) => {
+r.post('/web-api/auth/session/v2/verifySession', (req, res) => {
   const { traceId } = req.query;
   const data = {
     traceId,
