@@ -321,6 +321,9 @@ r.post('/web-api/game-proxy/v2/GameName/Get', (req, res) => {
         "err": null
     }
   };
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Origin', '*');
   res.json(data);
 });
 
@@ -462,6 +465,9 @@ r.post('/game-api/fortune-tiger/v2/GameInfo/Get', (req, res) => {
         "err": null
     }
   };
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Origin', '*');
   res.json(data);
 });
 
@@ -2250,7 +2256,10 @@ r.get('/web-api/game-proxy/v2/Resources/GetByResourcesTypeIds', (req, res) => {
     ],
     "err": null
 }
-  res.json(data);
+res.header('Access-Control-Allow-Credentials', 'true');
+res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
+res.header('Access-Control-Allow-Origin', '*');
+res.json(data);
 });
 
 
