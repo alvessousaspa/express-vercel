@@ -1,0 +1,65 @@
+{
+    "data": {
+        "slot_info": {
+            "wild_count": 0, 
+            "is_special_triggered": false, 
+            "is_wild_triggered": false, 
+            "free_spin_wins": 5, 
+            "winning_positions": {
+                "1": [1, 4, 7],
+                "2": [0, 3, 6],
+                "3": [2, 5, 8],
+                "4": [0, 4, 8],
+                "5": [2, 4, 6]
+            },
+            "original_reel_layout": null, 
+            "line_wins": {
+                "1": 4.8,
+                "2": 4.8,
+                "3": 4.8,
+                "4": 4.8,
+                "5": 4.8
+            },
+            "is_respin": false, 
+            "game_win_type": 4, 
+            "feature_bonus": null, 
+            "current_total_win": 240.0, 
+            "previous_win_multiplier_trigger_count": 1, 
+            "previous_cycle_win_count": 0, 
+            "reel_win_specific_positions": {
+                "1": 8.0,
+                "2": 8.0,
+                "3": 8.0,
+                "4": 8.0,
+                "5": 8.0
+            },
+            "hash_reel_spin_result": "1:5;5;5#5;0;5#5;0;5#R#5#011121#MV#0#MT#1#R#5#001020#MV#0#MT#1#R#5#021222#MV#0#MT#1#R#5#001122#MV#0#MT#1#R#5#021120#MV#0#MT#1#MG#240.0#", 
+            "max_line": 2, 
+            "coin_size": 0.3, 
+            "reel_layout": [5, 5, 5, 5, 0, 0, 5, 5, 5], 
+            "session_id": "1813948759773478400", 
+            "previous_session_id": "1813948732749577728", 
+            "spin_type": 4, 
+            "next_spin_type": 1, 
+            "pay_factor": 1, 
+            "all_wins": 240.00, 
+            "wild_id": 0, 
+            "wild_type": "C", 
+            "wild_key": "0_C", 
+            "wild_bonus_name": null, 
+            "wild_feature_gift": null, 
+            "balance_before_bet": 100728.40, 
+            "balance_after_bet": 100728.40, 
+            "balance": 100968.40, 
+            "total_bet": 0.00, 
+            "total_bet_before_bet": 3.00, 
+            "total_wins": 240.00, 
+            "net_profit": 240.00, 
+            "on_close_response": null, 
+            "max_response": null, 
+            "game_events": [1, 11]
+        }
+    },
+    "error": null
+}
+
