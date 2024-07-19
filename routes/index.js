@@ -91,9 +91,7 @@ r.post('/web-api/auth/session/v2/verifySession', (req, res) => {
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Content-Encoding', 'gzip');
-  res.header('Content-Type', 'application/json');
-  res.jsonp(data);
+  res.json(data);
 });
 
 r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
@@ -182,11 +180,7 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Content-Encoding', 'gzip');
-  res.header('Content-Type', 'application/json');
-  // add Set-Cookie: aliyungf_tc=fe60dcac0532e99859901d0167f6d951bf403e8181673b4812a5bf729acb0d72; Path=/; HttpOnly Vary: Accept-Encoding
-  res.header('Set-Cookie', 'aliyungf_tc=fe60dcac0532e99859901d0167f6d951bf403e8181673b4812a5bf729acb0d72; Path=/; HttpOnly Vary: Accept-Encoding');
-  res.jsonp(data);
+  res.json(data);
 });
 
 r.post('/web-api/game-proxy/v2/GameName/Get', (req, res) => {
