@@ -7,7 +7,7 @@ const GameName = '../datas/GameName.json';
 const GameInfo = '../datas/GameInfo.json';
 const GetByResourcesTypeIds = '../datas/GetByResourcesTypeIds.json';
 const Spin = '../datas/Spin.json';
-const { generateReel, calculateLineWins } = require('../common/utils');
+const { generateReel, calculateLineWins, getRandomInt, generateWinningPositions } = require('../common/utils');
 
 const r = Router();
 
