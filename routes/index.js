@@ -112,7 +112,7 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
         },
         err: null
     };
-
+    console.log(result);
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Origin', '*');
