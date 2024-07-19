@@ -60,7 +60,8 @@ r.post('/web-api/game-proxy/v2/Resources/GetByResourcesTypeIds', (req, res) => {
 
 r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
     const winningPositions = generateWinningPositions();
-    const lineWins = generateLineWins();
+    const symbols = Object.values(winningPositions).flat();
+    const lineWins = generateLineWins(symbols);
     const totalWin = calculateTotalWin(lineWins);
 
     const result = {
