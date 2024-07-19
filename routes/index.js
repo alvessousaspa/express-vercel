@@ -173,16 +173,13 @@ r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
     },
     "err": null
 }
-
-
-r.options('*', function(req, res, next) {
-  res.header(
-    'Access-Control-Allow-Methods',
-    'PUT, GET, HEAD, POST, DELETE, OPTIONS'
-  );
+  // add Access-Control-Allow-Credentials: true Access-Control-Allow-Methods: PUT, GET, HEAD, POST, DELETE, OPTIONS Access-Control-Allow-Origin: * Content-Encoding: gzip Content-Type: application/json
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Origin', '*');
-  res.send(200);
-});
+  res.header('Content-Encoding', 'gzip');
+  res.header('Content-Type', 'application/json');
+  res.send(data);
 });
 
 r.post('/web-api/game-proxy/v2/GameName/Get', (req, res) => {
