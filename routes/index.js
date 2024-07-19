@@ -71,7 +71,7 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
             si: {
                 wc: 5,
                 ist: false,
-                itw: totalWin > 0,
+                itw: true,
                 fws: 0,
                 wp: lineWins ? Object.keys(lineWins).map(key => reels.map(reel => reel[key - 1])) : null,
                 orl: reels.flat(),
