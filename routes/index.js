@@ -94,6 +94,7 @@ r.get('/web-api/auth/session/v2/verifySession', (req, res) => {
 r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
   const { traceId } = req.query;
   const data = {
+    traceId,
     dt: {
       oj: {
         jid: 0
