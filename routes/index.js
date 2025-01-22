@@ -79,7 +79,7 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
                 ist: false,
                 itw: totalWin > 0,
                 fws: 0,
-                wp: lineWins ? generateWinningPositions(lineWins) : null,
+                wp: generateWinningPositions(lineWins),
                 orl: reels.flat(),
                 lw: Object.keys(lineWins).length > 0 ? lineWins : null,
                 irs: false,
@@ -132,6 +132,16 @@ function countWilds(reels) {
     return reels.flat().filter(s => s === 0).length;
 }
 
+function generateWinningPositions(lineWins) {
+    if (Object.keys(lineWins).length === 0) return null;
+    
+    const positions = {};
+    Object.keys(lineWins).forEach(line => {
+        positions[line] = [0, 3, 6]; // Ajustar conforme necessário
+    });
+    return positions;
+}
+
 function generateRwsp(lineWins, totalWin) {
     if (Object.keys(lineWins).length === 0) return null;
     
@@ -158,6 +168,6 @@ r.get('/get-game-page', async (req, res) => {
     }
 });
 
-r.get('/', (req, res) => res.status(404).send());
+r.get('/', (req, res) => res.json(new SuccessResponseObject('express vercel boiler plate')));
 
 module.exports = r;
