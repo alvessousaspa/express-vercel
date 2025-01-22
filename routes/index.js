@@ -7,7 +7,7 @@ const GameName = '../datas/GameName.json';
 const GameInfo = '../datas/GameInfo.json';
 const GetByResourcesTypeIds = '../datas/GetByResourcesTypeIds.json';
 const Spin = '../datas/Spin.json';
-const { generateReel, calculateLineWins, getRandomInt, generateWinningPositions } = require('../common/utils');
+const { generateReel, calculateLineWins, getRandomInt, generateWinningPositions, paylines } = require('../common/utils');
 
 const r = Router();
 
@@ -61,6 +61,17 @@ r.post('/web-api/game-proxy/v2/Resources/GetByResourcesTypeIds', (req, res) => {
 r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
     const cs = parseFloat(req.headers.cs);
     const ml = parseInt(req.headers.ml);
+    
+    // Validar parâmetros de entrada
+    if (isNaN(cs) || isNaN(ml) || cs <= 0 || ml <= 0) {
+        return res.status(400).json({
+            err: {
+                code: 400,
+                message: "Invalid bet parameters"
+            }
+        });
+    }
+    
     const totalbet = cs * ml * 5;
     
     const reels = [generateReel(), generateReel(), generateReel()];
@@ -72,32 +83,37 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
     // Gerar hashr mais preciso
     const hashr = generateHashr(reels, lineWins, realWin);
     
+    const wildCount = countWilds(reels);
+    const winningPositions = generateWinningPositions(reels, paylines);
+    
+    const sessionId = generateSessionId();
+    
     const result = {
         dt: {
             si: {
-                wc: countWilds(reels),
+                wc: wildCount,
                 ist: false,
-                itw: totalWin > 0,
+                itw: realWin > 0,
                 fws: 0,
-                wp: generateWinningPositions(lineWins),
+                wp: winningPositions,
                 orl: reels.flat(),
                 lw: Object.keys(lineWins).length > 0 ? lineWins : null,
                 irs: false,
                 gwt: -1,
                 ctw: realWin,
-                cwc: countWilds(reels),
-                pcwc: countWilds(reels),
+                cwc: wildCount,
+                pcwc: wildCount,
                 rwsp: generateRwsp(lineWins, realWin),
                 hashr: hashr,
                 ml: ml,
                 cs: cs,
                 rl: reels.flat(),
-                sid: "1814402670505630721",
-                psid: "1814402670505630721",
+                sid: sessionId,
+                psid: sessionId,
                 st: 1,
                 nst: 1,
                 pf: 1,
-                aw: 0.00,
+                aw: realWin,
                 wid: 0,
                 wt: "C",
                 wk: "0_C",
@@ -105,17 +121,14 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
                 wfg: null,
                 blb: 100,
                 blab: 100 - totalbet,
-                bl: 100,
+                bl: 100 + realWin - totalbet,
                 tb: totalbet,
                 tbb: totalbet,
-                tw: realWin.toFixed(2),
-                np: (realWin - totalbet).toFixed(2),
+                tw: realWin,
+                np: (realWin - totalbet),
                 ocr: null,
                 mr: null,
-                ge: [
-                    1,
-                    11
-                ]
+                ge: [1, 11]
             }
         },
         err: null
@@ -132,29 +145,37 @@ function countWilds(reels) {
     return reels.flat().filter(s => s === 0).length;
 }
 
-function generateWinningPositions(lineWins) {
-    if (Object.keys(lineWins).length === 0) return null;
-    
-    const positions = {};
-    Object.keys(lineWins).forEach(line => {
-        positions[line] = [0, 3, 6]; // Ajustar conforme necessário
-    });
-    return positions;
-}
-
-function generateRwsp(lineWins, totalWin) {
+function generateRwsp(lineWins, realWin) {
     if (Object.keys(lineWins).length === 0) return null;
     
     const rwsp = {};
-    Object.keys(lineWins).forEach(line => {
-        rwsp[line] = lineWins[line] * 1.666; // Multiplicador do Wild
+    Object.entries(lineWins).forEach(([line, win]) => {
+        // Se o ganho for maior que o normal, aplicar multiplicador do Wild
+        rwsp[line] = win * 1.666666667; // Usar valor mais preciso do multiplicador
     });
     return rwsp;
 }
 
 function generateHashr(reels, lineWins, totalWin) {
-    // Implementar lógica do hashr conforme documentação
-    return `0:${reels[0].join(';')}#${reels[1].join(';')}#${reels[2].join(';')}#MV#3.0#MT#1#MG#${totalWin}#`;
+    let hashr = `0:${reels[0].join(';')}#${reels[1].join(';')}#${reels[2].join(';')}`;
+    
+    // Adicionar informações de Wild se houver ganhos
+    if (Object.keys(lineWins).length > 0) {
+        Object.entries(lineWins).forEach(([line, win]) => {
+            const lineSymbols = paylines[parseInt(line) - 1].map(([x, y]) => reels[x][y]);
+            if (lineSymbols.includes(0)) { // Se tem Wild na linha
+                hashr += `#R#7#${line}${line}${line}`;
+            }
+            hashr += `#R#${line}#${win.toFixed(2)}`;
+        });
+    }
+    
+    hashr += `#MV#3.0#MT#1#MG#${totalWin.toFixed(2)}#`;
+    return hashr;
+}
+
+function generateSessionId() {
+    return Date.now().toString() + Math.random().toString(36).substring(2, 15);
 }
 
 r.get('/get-game-page', async (req, res) => {

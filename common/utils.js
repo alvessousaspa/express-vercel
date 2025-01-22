@@ -1,3 +1,15 @@
+const paylines = [
+    [[0,0], [1,0], [2,0]], // Linha superior
+    [[0,1], [1,1], [2,1]], // Linha do meio
+    [[0,2], [1,2], [2,2]], // Linha inferior
+    [[0,0], [1,1], [2,2]], // Diagonal 1
+    [[0,2], [1,1], [2,0]]  // Diagonal 2
+];
+
+const WILD_MULTIPLIER = 1.666666667;
+const MAX_LINES = 5;
+const WILD_SYMBOL = 0;
+
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
@@ -24,28 +36,23 @@ function generateReel() {
     );
 }
 
-function generateWinningPositions(reels) {
+function generateWinningPositions(reels, paylines) {
     const positions = {};
-    for (let i = 0; i < reels.length; i++) {
-        const reel = reels[i];
-        const position = getRandomInt(3);
-        positions[i + 1] = reel[position];
-    }
-    return positions;
+    paylines.forEach((line, index) => {
+        const symbols = line.map(([x, y]) => reels[x][y]);
+        const hasWild = symbols.includes(0);
+        const isWinningLine = hasWild || symbols.every(s => s === symbols[0]);
+        
+        if (isWinningLine) {
+            positions[index + 1] = line.map(([x, y]) => x * 3 + y);
+        }
+    });
+    return Object.keys(positions).length > 0 ? positions : null;
 }
 
 function calculateLineWins(reels) {
     const lineWins = {};
     let totalWin = 0;
-
-    // Definir as linhas de pagamento
-    const paylines = [
-        [[0,0], [1,0], [2,0]], // Linha superior
-        [[0,1], [1,1], [2,1]], // Linha do meio
-        [[0,2], [1,2], [2,2]], // Linha inferior
-        [[0,0], [1,1], [2,2]], // Diagonal 1
-        [[0,2], [1,1], [2,0]]  // Diagonal 2
-    ];
 
     paylines.forEach((line, index) => {
         const symbols = line.map(([x, y]) => reels[x][y]);
@@ -63,13 +70,24 @@ function calculateWinForLine(symbols) {
     // Verificar se há Wild na linha
     const hasWild = symbols.includes(0);
     
-    // Se todos os símbolos são iguais ou há Wild
-    if (hasWild || symbols.every(s => s === symbols[0])) {
-        const baseSymbol = hasWild ? 
-            symbols.find(s => s !== 0) || 0 : 
-            symbols[0];
-            
-        return payTable[baseSymbol];
+    if (hasWild) {
+        // Se todos são Wilds, usar valor do Wild
+        if (symbols.every(s => s === 0)) {
+            return payTable[0];
+        }
+        
+        // Encontrar o símbolo mais valioso na linha (excluindo Wild)
+        const highestPayingSymbol = symbols.reduce((highest, current) => {
+            if (current !== 0 && payTable[current] > payTable[highest]) {
+                return current;
+            }
+            return highest;
+        }, symbols.find(s => s !== 0));
+        
+        return payTable[highestPayingSymbol];
+    } else if (symbols.every(s => s === symbols[0])) {
+        // Se todos os símbolos são iguais
+        return payTable[symbols[0]];
     }
     
     return 0;
@@ -89,6 +107,10 @@ module.exports = {
     getRandomInt,
     generateReel,
     generateWinningPositions,
-    calculateLineWins
+    calculateLineWins,
+    paylines,
+    WILD_MULTIPLIER,
+    MAX_LINES,
+    WILD_SYMBOL
 };
 
