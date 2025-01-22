@@ -8,7 +8,9 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "jest -i"
+    "test": "jest -i",
+    "build": "npm install",
+    "vercel-build": "echo hello"
   },
   "engines": {
     "node": "20.x"
