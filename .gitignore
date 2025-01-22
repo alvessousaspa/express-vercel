@@ -1,4 +1,6 @@
 node_modules/
+.env
 .vercel
 coverage/
 yarn.lock
+package-lock.json
