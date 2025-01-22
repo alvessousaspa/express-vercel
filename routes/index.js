@@ -59,35 +59,38 @@ r.post('/web-api/game-proxy/v2/Resources/GetByResourcesTypeIds', (req, res) => {
 });
 
 r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
-    const cs = req.headers.cs;
-    const ml = req.headers.ml;
+    const cs = parseFloat(req.headers.cs);
+    const ml = parseInt(req.headers.ml);
     const totalbet = cs * ml * 5;
+    
     const reels = [generateReel(), generateReel(), generateReel()];
-    console.log(reels);
     const { lineWins, totalWin } = calculateLineWins(reels);
-    console.log("lineWins", lineWins, "totalWin", totalWin);
+    
+    // Calcular ganho real considerando aposta
+    const realWin = totalWin * cs * ml;
+    
+    // Gerar hashr mais preciso
+    const hashr = generateHashr(reels, lineWins, realWin);
+    
     const result = {
         dt: {
             si: {
-                wc: 5,
+                wc: countWilds(reels),
                 ist: false,
-                itw: true,
+                itw: totalWin > 0,
                 fws: 0,
-                wp: null,
+                wp: generateWinningPositions(lineWins),
                 orl: reels.flat(),
-                lw: null,
+                lw: Object.keys(lineWins).length > 0 ? lineWins : null,
                 irs: false,
                 gwt: -1,
-                fb: null,
-                ctw: 0.0,
-                pmt: null,
-                cwc: 0,
-                fstc: null,
-                pcwc: 0,
-                rwsp: totalWin > 0 ? { [getRandomInt(3) + 1]: totalWin } : null,
-                hashr: "0:5;6;7#7;5;7#6;7;5#R#5#001122#MV#3.0#MT#1#MG#4.8#",
-                ml: 2,
-                cs: 0.3,
+                ctw: realWin,
+                cwc: countWilds(reels),
+                pcwc: countWilds(reels),
+                rwsp: generateRwsp(lineWins, realWin),
+                hashr: hashr,
+                ml: ml,
+                cs: cs,
                 rl: reels.flat(),
                 sid: "1814402670505630721",
                 psid: "1814402670505630721",
@@ -105,8 +108,8 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
                 bl: 100,
                 tb: totalbet,
                 tbb: totalbet,
-                tw: totalWin.toFixed(2),
-                np: (totalWin - 3.00).toFixed(2),
+                tw: realWin.toFixed(2),
+                np: (realWin - totalbet).toFixed(2),
                 ocr: null,
                 mr: null,
                 ge: [
@@ -117,10 +120,52 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
         },
         err: null
     };
+    
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Origin', '*');
     res.json(result);
+});
+
+// Funções auxiliares
+function countWilds(reels) {
+    return reels.flat().filter(s => s === 0).length;
+}
+
+function generateWinningPositions(lineWins) {
+    if (Object.keys(lineWins).length === 0) return null;
+    
+    const positions = {};
+    Object.keys(lineWins).forEach(line => {
+        positions[line] = [0, 3, 6]; // Ajustar conforme necessário
+    });
+    return positions;
+}
+
+function generateRwsp(lineWins, totalWin) {
+    if (Object.keys(lineWins).length === 0) return null;
+    
+    const rwsp = {};
+    Object.keys(lineWins).forEach(line => {
+        rwsp[line] = lineWins[line] * 1.666; // Multiplicador do Wild
+    });
+    return rwsp;
+}
+
+function generateHashr(reels, lineWins, totalWin) {
+    // Implementar lógica do hashr conforme documentação
+    return `0:${reels[0].join(';')}#${reels[1].join(';')}#${reels[2].join(';')}#MV#3.0#MT#1#MG#${totalWin}#`;
+}
+
+r.get('/get-game-page', async (req, res) => {
+    const url = 'https://m.xn--sjffdsafdsfsadfasd-8sb.online/126/index.html?ot=B5DAD969-AC52-4FB8-839E-60CA46B19978&btt=1&ops=s3-pg-09470d18-5854-4225-8dbd-77f83d1ca624&l=pt&or=static.xn--sjffdsafdsfsadfasd-8sb.online';
+
+    try {
+        const response = await axios.get(url);
+        res.send(response.data);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch the game page' });
+    }
 });
 
 r.get('/', (req, res) => res.json(new SuccessResponseObject('express vercel boiler plate')));

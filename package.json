@@ -6,7 +6,8 @@
   "author": "Kizito Akhilome <kizito@akhilo.me>",
   "license": "MIT",
   "scripts": {
-    "start": "vercel dev",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "jest -i"
   },
   "engines": {
@@ -18,7 +19,8 @@
   ],
   "dependencies": {
     "express": "^4.19.2",
-    "helmet": "^7.1.0"
+    "helmet": "^7.1.0",
+    "nodemon": "^3.0.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

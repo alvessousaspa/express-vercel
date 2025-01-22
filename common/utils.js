@@ -3,8 +3,25 @@ function getRandomInt(max) {
 }
 
 function generateReel() {
-    const symbols = [0, 2, 3, 4, 5, 6, 7]; // Oranges, Firecrackers, Red Packets, Purse, Lucky Charm, Gold Ingot, Wild
-    return Array.from({ length: 3 }, () => symbols[getRandomInt(symbols.length)]);
+    // Definir pesos para cada símbolo
+    const symbols = [
+        { id: 0, weight: 1 },  // Wild (mais raro)
+        { id: 2, weight: 8 },  // Laranja (mais comum)
+        { id: 3, weight: 6 },  // Enfeite Verde
+        { id: 4, weight: 6 },  // Foguete
+        { id: 5, weight: 5 },  // Envelope
+        { id: 6, weight: 4 },  // Saco de Moedas
+        { id: 7, weight: 2 }   // Lingote (mais raro)
+    ];
+    
+    // Criar array com símbolos repetidos conforme seus pesos
+    const weightedSymbols = symbols.flatMap(symbol => 
+        Array(symbol.weight).fill(symbol.id)
+    );
+    
+    return Array.from({ length: 3 }, () => 
+        weightedSymbols[getRandomInt(weightedSymbols.length)]
+    );
 }
 
 function generateWinningPositions(reels) {
@@ -19,29 +36,54 @@ function generateWinningPositions(reels) {
 
 function calculateLineWins(reels) {
     const lineWins = {};
-    const payTable = {
-        0: 3,
-        2: 5,
-        3: 8,
-        4: 10,
-        5: 25,
-        6: 100,
-        7: 250
-    };
     let totalWin = 0;
 
-    // Checking horizontal lines
-    for (let line = 0; line < 3; line++) {
-        const symbol = reels[0][line];
-        if (reels[1][line] === symbol && reels[2][line] === symbol) {
-            const winAmount = payTable[symbol];
-            lineWins[line + 1] = winAmount;
-            totalWin += winAmount;
+    // Definir as linhas de pagamento
+    const paylines = [
+        [[0,0], [1,0], [2,0]], // Linha superior
+        [[0,1], [1,1], [2,1]], // Linha do meio
+        [[0,2], [1,2], [2,2]], // Linha inferior
+        [[0,0], [1,1], [2,2]], // Diagonal 1
+        [[0,2], [1,1], [2,0]]  // Diagonal 2
+    ];
+
+    paylines.forEach((line, index) => {
+        const symbols = line.map(([x, y]) => reels[x][y]);
+        const win = calculateWinForLine(symbols);
+        if (win > 0) {
+            lineWins[index + 1] = win;
+            totalWin += win;
         }
-    }
+    });
 
     return { lineWins, totalWin };
 }
+
+function calculateWinForLine(symbols) {
+    // Verificar se há Wild na linha
+    const hasWild = symbols.includes(0);
+    
+    // Se todos os símbolos são iguais ou há Wild
+    if (hasWild || symbols.every(s => s === symbols[0])) {
+        const baseSymbol = hasWild ? 
+            symbols.find(s => s !== 0) || 0 : 
+            symbols[0];
+            
+        return payTable[baseSymbol];
+    }
+    
+    return 0;
+}
+
+const payTable = {
+    0: 250,  // Wild
+    2: 3,    // Laranja
+    3: 8,    // Enfeite Verde
+    4: 5,    // Foguete
+    5: 8,    // Envelope
+    6: 10,   // Saco de Moedas
+    7: 100   // Lingote
+};
 
 module.exports = {
     getRandomInt,
