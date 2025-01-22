@@ -19,8 +19,10 @@ app.use('/', routes);
 // Default catch-all handler
 app.all('*', (req, res) => res.status(404).json(new ErrorResponseObject('route not defined')));
 
-// make it run in port 3000
-app.listen(3000);
-
+// Use a porta definida pela Vercel ou 3000 como padrão
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
 
 module.exports = app;
