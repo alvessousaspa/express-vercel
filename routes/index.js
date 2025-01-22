@@ -59,8 +59,8 @@ r.post('/web-api/game-proxy/v2/Resources/GetByResourcesTypeIds', (req, res) => {
 });
 
 r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
-    const cs = parseFloat(req.headers.cs);
-    const ml = parseInt(req.headers.ml);
+    const cs = parseFloat(req.body.cs);
+    const ml = parseInt(req.body.ml);
     
     // Validar parâmetros de entrada
     if (isNaN(cs) || isNaN(ml) || cs <= 0 || ml <= 0) {
