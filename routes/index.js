@@ -25,6 +25,9 @@ r.post('/web-api/auth/session/v2/verifySession', (req, res) => {
 r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
     const { traceId } = req.query;
     const data = require('../datas/verifyOperatorPlayerSession.json');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Origin', '*');
     res.json(data);
 });
 

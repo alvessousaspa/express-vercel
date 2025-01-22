@@ -3,3 +3,5 @@ node_modules/
 coverage/
 save.txt
 teste.txt
+.env
+.DS_Store
