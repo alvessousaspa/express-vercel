@@ -25,12 +25,12 @@ function generateReel() {
 }
 
 function generateWinningPositions(reels) {
+    if (!reels || Object.keys(reels).length === 0) return null;
+    
     const positions = {};
-    for (let i = 0; i < reels.length; i++) {
-        const reel = reels[i];
-        const position = getRandomInt(3);
-        positions[i + 1] = reel[position];
-    }
+    Object.keys(reels).forEach(line => {
+        positions[line] = [0, 3, 6]; // Ajustar conforme necessário
+    });
     return positions;
 }
 

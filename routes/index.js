@@ -79,7 +79,7 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
                 ist: false,
                 itw: totalWin > 0,
                 fws: 0,
-                wp: generateWinningPositions(lineWins),
+                wp: lineWins ? generateWinningPositions(lineWins) : null,
                 orl: reels.flat(),
                 lw: Object.keys(lineWins).length > 0 ? lineWins : null,
                 irs: false,
@@ -130,16 +130,6 @@ r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
 // Funções auxiliares
 function countWilds(reels) {
     return reels.flat().filter(s => s === 0).length;
-}
-
-function generateWinningPositions(lineWins) {
-    if (Object.keys(lineWins).length === 0) return null;
-    
-    const positions = {};
-    Object.keys(lineWins).forEach(line => {
-        positions[line] = [0, 3, 6]; // Ajustar conforme necessário
-    });
-    return positions;
 }
 
 function generateRwsp(lineWins, totalWin) {
