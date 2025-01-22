@@ -158,6 +158,6 @@ r.get('/get-game-page', async (req, res) => {
     }
 });
 
-r.get('/', (req, res) => res.json(new SuccessResponseObject('express vercel boiler plate')));
+r.get('/', (req, res) => res.status(404).send());
 
 module.exports = r;
