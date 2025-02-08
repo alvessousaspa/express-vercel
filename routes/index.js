@@ -8,27 +8,62 @@ const GameInfo = '../datas/GameInfo.json';
 const GetByResourcesTypeIds = '../datas/GetByResourcesTypeIds.json';
 const Spin = '../datas/Spin.json';
 const { generateReel, calculateLineWins, getRandomInt, generateWinningPositions, paylines } = require('../common/utils');
+const userService = require('../services/userService');
 
 const r = Router();
 
 r.use('/demo', demo);
 
-r.post('/web-api/auth/session/v2/verifySession', (req, res) => {
-    const { traceId } = req.query;
-    const data = require('../datas/verifyssesion.json');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Origin', '*');
-    res.json(data);
+r.post('/web-api/auth/session/v2/verifySession', async (req, res) => {
+    try {
+        const { traceId } = req.query;
+        const userId = req.headers['user-id'];
+        const user = await userService.getUser(userId);
+        
+        const baseData = require('../datas/verifyssesion.json');
+        
+        // Atualizar dados dinâmicos mantendo a estrutura original
+        if (user) {
+            baseData.dt.pid = user.id;
+            baseData.dt.nkn = user.nickname;
+            baseData.dt.tk = user.session.token;
+            baseData.dt.cc = user.currency;
+        }
+
+        res.header('Access-Control-Allow-Credentials', 'true');
+        res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Origin', '*');
+        res.json(baseData);
+    } catch (error) {
+        console.error('Error in verifySession:', error);
+        res.json(require('../datas/verifyssesion.json')); // Fallback para dados estáticos
+    }
 });
 
-r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', (req, res) => {
-    const { traceId } = req.query;
-    const data = require('../datas/verifyOperatorPlayerSession.json');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Origin', '*');
-    res.json(data);
+r.post('/web-api/auth/session/v2/verifyOperatorPlayerSession', async (req, res) => {
+    try {
+        const { traceId } = req.query;
+        const userId = req.headers['user-id'];
+        const user = await userService.getUser(userId);
+        
+        const baseData = require('../datas/verifyOperatorPlayerSession.json');
+        
+        // Atualizar dados dinâmicos mantendo a estrutura original
+        if (user) {
+            baseData.dt.pid = user.id;
+            baseData.dt.nkn = user.nickname;
+            baseData.dt.tk = user.session.token;
+            baseData.dt.cc = user.currency;
+        }
+
+        res.header('Access-Control-Allow-Credentials', 'true');
+        res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Origin', '*');
+        res.json(baseData);
+    } catch (error) {
+        console.error('Error in verifyOperatorPlayerSession:', error);
+        res.json(require('../datas/verifyOperatorPlayerSession.json')); // Fallback para dados estáticos
+    }
 });
 
 r.post('/web-api/game-proxy/v2/GameName/Get', (req, res) => {
@@ -40,13 +75,30 @@ r.post('/web-api/game-proxy/v2/GameName/Get', (req, res) => {
     res.send(data);
 });
 
-r.post('/game-api/fortune-tiger/v2/GameInfo/Get', (req, res) => {
-    const { traceId } = req.query;
-    const data = require('../datas/GameInfo.json');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Origin', '*');
-    res.send(data);
+r.post('/game-api/fortune-tiger/v2/GameInfo/Get', async (req, res) => {
+    try {
+        const { traceId } = req.query;
+        const userId = req.headers['user-id'];
+        const user = await userService.getUser(userId);
+        
+        const baseData = require('../datas/GameInfo.json');
+        
+        // Atualizar dados dinâmicos mantendo a estrutura original
+        if (user) {
+            baseData.dt.ls.si.bl = user.balance;
+            baseData.dt.ls.si.blb = user.balance;
+            baseData.dt.ls.si.blab = user.balance;
+            baseData.dt.cc = user.currency;
+        }
+
+        res.header('Access-Control-Allow-Credentials', 'true');
+        res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Origin', '*');
+        res.json(baseData);
+    } catch (error) {
+        console.error('Error in GameInfo:', error);
+        res.json(require('../datas/GameInfo.json')); // Fallback para dados estáticos
+    }
 });
 
 r.post('/web-api/game-proxy/v2/Resources/GetByResourcesTypeIds', (req, res) => {
@@ -58,86 +110,134 @@ r.post('/web-api/game-proxy/v2/Resources/GetByResourcesTypeIds', (req, res) => {
     res.send(data);
 });
 
-r.post('/game-api/fortune-tiger/v2/Spin', (req, res) => {
-    const cs = parseFloat(req.body.cs);
-    const ml = parseInt(req.body.ml);
-    
-    // Validar parâmetros de entrada
-    if (isNaN(cs) || isNaN(ml) || cs <= 0 || ml <= 0) {
-        return res.status(400).json({
+r.post('/game-api/fortune-tiger/v2/Spin', async (req, res) => {
+    try {
+        const userId = req.headers['user-id']; // Você precisa enviar o ID do usuário no header
+        if (!userId) {
+            return res.status(401).json({
+                err: {
+                    code: 401,
+                    message: "User not authenticated"
+                }
+            });
+        }
+
+        const user = await userService.getUser(userId);
+        if (!user) {
+            return res.status(404).json({
+                err: {
+                    code: 404,
+                    message: "User not found"
+                }
+            });
+        }
+
+        const cs = parseFloat(req.body.cs);
+        const ml = parseInt(req.body.ml);
+        
+        if (isNaN(cs) || isNaN(ml) || cs <= 0 || ml <= 0) {
+            return res.status(400).json({
+                err: {
+                    code: 400,
+                    message: "Invalid bet parameters"
+                }
+            });
+        }
+        
+        const totalbet = cs * ml * 5;
+        
+        // Verificar se o usuário tem saldo suficiente
+        if (user.balance < totalbet) {
+            return res.status(400).json({
+                err: {
+                    code: 400,
+                    message: "Insufficient balance"
+                }
+            });
+        }
+
+        const reels = [generateReel(), generateReel(), generateReel()];
+        const { lineWins, totalWin } = calculateLineWins(reels);
+        const realWin = totalWin * cs * ml;
+        
+        // Atualizar saldo do usuário
+        await userService.updateBalance(userId, realWin - totalbet);
+        
+        // Registrar histórico do jogo
+        await userService.addGameHistory(userId, {
+            gameId: "fortune-tiger",
+            bet: totalbet,
+            win: realWin,
+            balanceAfter: user.balance + realWin - totalbet
+        });
+
+        // Gerar hashr mais preciso
+        const hashr = generateHashr(reels, lineWins, realWin);
+        
+        const wildCount = countWilds(reels);
+        const winningPositions = generateWinningPositions(reels, paylines);
+        
+        const sessionId = generateSessionId();
+        
+        const result = {
+            dt: {
+                si: {
+                    wc: wildCount,
+                    ist: false,
+                    itw: realWin > 0,
+                    fws: 0,
+                    wp: winningPositions,
+                    orl: reels.flat(),
+                    lw: Object.keys(lineWins).length > 0 ? lineWins : null,
+                    irs: false,
+                    gwt: -1,
+                    ctw: realWin,
+                    cwc: wildCount,
+                    pcwc: wildCount,
+                    rwsp: generateRwsp(lineWins, realWin),
+                    hashr: hashr,
+                    ml: ml,
+                    cs: cs,
+                    rl: reels.flat(),
+                    sid: sessionId,
+                    psid: sessionId,
+                    st: 1,
+                    nst: 1,
+                    pf: 1,
+                    aw: realWin,
+                    wid: 0,
+                    wt: "C",
+                    wk: "0_C",
+                    wbn: null,
+                    wfg: null,
+                    blb: user.balance,
+                    blab: user.balance - totalbet,
+                    bl: user.balance + realWin - totalbet,
+                    tb: totalbet,
+                    tbb: totalbet,
+                    tw: realWin,
+                    np: (realWin - totalbet),
+                    ocr: null,
+                    mr: null,
+                    ge: [1, 11]
+                }
+            },
+            err: null
+        };
+        
+        res.header('Access-Control-Allow-Credentials', 'true');
+        res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Origin', '*');
+        res.json(result);
+    } catch (error) {
+        console.error('Error in spin:', error);
+        res.status(500).json({
             err: {
-                code: 400,
-                message: "Invalid bet parameters"
+                code: 500,
+                message: "Internal server error"
             }
         });
     }
-    
-    const totalbet = cs * ml * 5;
-    
-    const reels = [generateReel(), generateReel(), generateReel()];
-    const { lineWins, totalWin } = calculateLineWins(reels);
-    
-    // Calcular ganho real considerando aposta
-    const realWin = totalWin * cs * ml;
-    
-    // Gerar hashr mais preciso
-    const hashr = generateHashr(reels, lineWins, realWin);
-    
-    const wildCount = countWilds(reels);
-    const winningPositions = generateWinningPositions(reels, paylines);
-    
-    const sessionId = generateSessionId();
-    
-    const result = {
-        dt: {
-            si: {
-                wc: wildCount,
-                ist: false,
-                itw: realWin > 0,
-                fws: 0,
-                wp: winningPositions,
-                orl: reels.flat(),
-                lw: Object.keys(lineWins).length > 0 ? lineWins : null,
-                irs: false,
-                gwt: -1,
-                ctw: realWin,
-                cwc: wildCount,
-                pcwc: wildCount,
-                rwsp: generateRwsp(lineWins, realWin),
-                hashr: hashr,
-                ml: ml,
-                cs: cs,
-                rl: reels.flat(),
-                sid: sessionId,
-                psid: sessionId,
-                st: 1,
-                nst: 1,
-                pf: 1,
-                aw: realWin,
-                wid: 0,
-                wt: "C",
-                wk: "0_C",
-                wbn: null,
-                wfg: null,
-                blb: 100,
-                blab: 100 - totalbet,
-                bl: 100 + realWin - totalbet,
-                tb: totalbet,
-                tbb: totalbet,
-                tw: realWin,
-                np: (realWin - totalbet),
-                ocr: null,
-                mr: null,
-                ge: [1, 11]
-            }
-        },
-        err: null
-    };
-    
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, HEAD, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Origin', '*');
-    res.json(result);
 });
 
 // Funções auxiliares

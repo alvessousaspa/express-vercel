@@ -1,0 +1,24 @@
+{
+  "users": {
+    "YkJ0gK6mPF": {
+      "id": "YkJ0gK6mPF",
+      "nickname": "Player1",
+      "balance": 1000.00,
+      "currency": "USD",
+      "session": {
+        "token": "F0594194-F184-4310-A7AD-F5AEC0890B51",
+        "lastLogin": "2024-03-27T10:00:00Z",
+        "isActive": true
+      },
+      "gameHistory": [
+        {
+          "timestamp": "2024-03-27T10:05:00Z",
+          "gameId": "fortune-tiger",
+          "bet": 1.00,
+          "win": 5.00,
+          "balanceAfter": 1004.00
+        }
+      ]
+    }
+  }
+} 
